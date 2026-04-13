@@ -1,0 +1,15 @@
+{
+  "name": "entry",
+  "version": "1.0.0",
+  "description": "Please describe the basic information.",
+  "main": "",
+  "author": "",
+  "license": "",
+  "dependencies": {
+    "@mapplus/react-native-webmap": "file:../../node_modules/@mapplus/react-native-webmap/harmony/rn_webmap.har",
+    "@react-native-oh-tpl/react-native-webview": "file:../../node_modules/@react-native-oh-tpl/react-native-webview/harmony/rn_webview.har",
+    "@rnoh/react-native-openharmony": "0.72.119"
+  },
+  "devDependencies": {},
+  "dynamicDependencies": {}
+}

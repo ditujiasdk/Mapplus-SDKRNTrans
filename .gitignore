@@ -1,0 +1,91 @@
+# ==============================
+# 1. React Native 通用忽略
+# ==============================
+node_modules/
+.expo/
+.dist/
+tmp/
+temp/
+
+# iOS
+ios/Pods/
+ios/build/
+*.xcworkspace
+!default.xcworkspace
+ios/*.xcarchive
+ios/.xcode.env.local
+
+# Android
+android/build/
+android/app/build/
+android/.gradle/
+android/captures/
+android/keystores/
+android/app/release/
+android/app/.cxx/
+
+# 环境变量
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 日志
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE
+.idea/
+.vscode/
+.DS_Store
+*.swp
+*.swo
+
+# 打包缓存
+.gradle
+.idea
+*.iml
+build/
+captures/
+
+# ==============================
+# 2. 鸿蒙 HarmonyOS 工程忽略
+# ==============================
+# 鸿蒙构建输出
+oh_modules/
+build/
+build-profile.json5
+cache/
+.hmscore/
+.hmignore
+
+# 鸿蒙 IDE 配置
+.idea/
+*.iws
+*.iml
+*.ipr
+local.properties
+.hvigor/
+.hm/
+.hms/
+.huawei/
+
+# 鸿蒙签名 / 密钥
+*.p12
+*.csr
+*.keystore
+signingConfigs/
+signing/
+
+# 鸿蒙日志、临时文件
+.log/
+logs/
+*.log
+temp/
+tmp/
+
+# 鸿蒙设备运行缓存
+device/
+run/
