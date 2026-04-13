@@ -2,7 +2,7 @@
  * @Author: xiezhiyan 16297996+xiezhiyan@users.noreply.github.com
  * @Date: 2026-04-02 16:28:59
  * @LastEditors: xiezhiyan 16297996+xiezhiyan@users.noreply.github.com
- * @LastEditTime: 2026-04-13 18:26:36
+ * @LastEditTime: 2026-04-13 18:37:04
  * @FilePath: /RNTrans/android/app/src/main/java/com/testTransRN/RNActivity.java
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */

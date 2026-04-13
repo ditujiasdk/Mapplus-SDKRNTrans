@@ -2,6 +2,8 @@
 // Index.ets
 // import { BusinessError } from '@kit.BasicServicesKit';
 import { BusinessError } from '@kit.BasicServicesKit';
+import { router } from '@kit.ArkUI';
+
 @Entry
 @Component
 struct Index {
@@ -29,16 +31,27 @@ struct Index {
         // 跳转按钮绑定onClick事件，单击时跳转到第二页
         .onClick(() => {
           console.info(`Succeeded in clicking the 'Next' button.`)
-          // 获取UIContext
-          let uiContext: UIContext = this.getUIContext();
-          let router = uiContext.getRouter();
-          // 跳转到第二页
-          router.pushUrl({ url: 'pages/RNIndex' }).then(() => {
-            console.info('Succeeded in jumping to the second page.')
 
-          }).catch((err: BusinessError) => {
-            console.error(`Failed to jump to the second page. Code is ${err.code}, message is ${err.message}`)
+          // router?.replace({ url: 'pages/RNIndex' })
+          router.pushUrl({ url: 'pages/RNIndex' }, router.RouterMode.Single, (err) => {
+            if (err) {
+              console.error(`Invoke pushUrl failed, code is ${err.code}, message is ${err.message}`);
+              return;
+            }
+            console.info('Invoke pushUrl succeeded.');
           })
+          // // 获取UIContext
+          // let uiContext: UIContext = this.getUIContext();
+          // let router = uiContext.getRouter();
+          // // 跳转到第二页
+          // router.pushUrl({ url: 'pages/RNIndex'},
+          //   // 关键配置：启用单例模式
+          //    ).then(() => {
+          //   console.info('Succeeded in jumping to the second page.')
+          //
+          // }).catch((err: BusinessError) => {
+          //   console.error(`Failed to jump to the second page. Code is ${err.code}, message is ${err.message}`)
+          // })
         })
       }
       .width('100%')
