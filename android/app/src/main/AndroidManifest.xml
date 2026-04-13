@@ -10,7 +10,7 @@
       android:allowBackup="false"
       android:theme="@style/AppTheme">
       <activity
-        android:name=".NativeMainActivity"
+        android:name=".MainActivity"
         android:label="@string/app_name"
         android:windowSoftInputMode="adjustResize"
         android:exported="true">
@@ -20,7 +20,7 @@
         </intent-filter>
       </activity>
       <activity
-        android:name=".MainActivity"
+        android:name=".RNActivity"
         android:label="@string/app_name"
         android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
         android:launchMode="singleTask"
