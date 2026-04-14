@@ -13,13 +13,13 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { getAssets } from '../../assets';
-import { ImageButton, WebmapView } from '../../components';
+import { ImageButton, MapView } from '../../components';
 import BaseLayerData from '../../constants/BaseLayerData';
 import { DemoStackPageProps } from '../../navigators/types';
 import { DataUtil, LicenseUtil, WebMapUtil } from '../../utils';
 import NavigationComponent from '../../components/NavigationComponent';
 import { navDataTest } from './navData';
-import NativeHTools from '../../specs/v1/NativeHTools';
+import NativeTTSTools from '../../specs/v1/NativeTTSTools';
 
 interface Props extends DemoStackPageProps<'Navigation'> {}
 
@@ -30,7 +30,6 @@ interface Props extends DemoStackPageProps<'Navigation'> {}
  */
 export default function Navigation(props: Props) {
   const [license, setLicense] = useState<ILicenseInfo | undefined>();
-  const [clientUrl, setClientUrl] = useState<string | undefined>();
 
   const [headingUp, setHeadingUp] = useState<boolean>(false);
   const [navPause, setNavPause] = useState<boolean>(false);
@@ -103,16 +102,6 @@ export default function Navigation(props: Props) {
       WebMapUtil.setClient(null);
     };
   }, []);
-
-  useEffect(() => {
-    if (license) {
-      // 获取 sdk web 服务地址
-      const res = RTNWebMap.getClientUrl();
-      if (res) {
-        setClientUrl(res);
-      }
-    }
-  }, [license]);
 
   /**
    * 初始化导航
@@ -213,10 +202,10 @@ export default function Navigation(props: Props) {
       // console.log(param.navInfo)
     });
 
-    NativeHTools.initTTS();
+    NativeTTSTools.initTTS();
     client.addListener('onNavgationAudioMessageChange', param => {
       console.log(param.message);
-      NativeHTools.speak(param.message);
+      NativeTTSTools.speak(param.message);
     });
     // await client.navigation.setNavigationInfoUpdateCallback((navState, info)=>{
     //   console.log(navState)
@@ -261,7 +250,7 @@ export default function Navigation(props: Props) {
     console.log('导航停止');
     const client = WebMapUtil.getClient();
     if (!client) return;
-    NativeHTools.stopSpeak();
+    NativeTTSTools.stopSpeak();
     await client.navigation.stop();
   };
 
@@ -342,16 +331,13 @@ export default function Navigation(props: Props) {
     );
   };
 
-  if (!license || !clientUrl) return null;
+  if (!license) return null;
 
   return (
-    <WebmapView
-      clientUrl={clientUrl}
-      onInited={onLoad}
-      navigation={props.navigation}>
+    <MapView onInited={onLoad} navigation={props.navigation}>
       {renderTools()}
       <NavigationComponent navdata={navData} />
-    </WebmapView>
+    </MapView>
   );
 }
 

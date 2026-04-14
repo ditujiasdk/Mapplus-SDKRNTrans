@@ -34,7 +34,7 @@ export const BackButton: React.FC<BackButtonProps> = ({
 const styles = StyleSheet.create({
   button: {
     position: 'absolute',
-    bottom: 16,
+    bottom: 26,
     left: 16,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     borderRadius: 20,

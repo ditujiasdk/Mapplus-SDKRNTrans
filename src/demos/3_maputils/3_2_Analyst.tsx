@@ -28,7 +28,7 @@ import {
   View,
 } from 'react-native';
 import { getAssets } from '../../assets';
-import { ImageButton, WebmapView } from '../../components';
+import { ImageButton, MapView } from '../../components';
 import BaseLayerData from '../../constants/BaseLayerData';
 import { DemoStackPageProps } from '../../navigators/types';
 import { DataUtil, LicenseUtil, ToolRefs, WebMapUtil } from '../../utils';
@@ -75,7 +75,6 @@ interface Props extends DemoStackPageProps<'Analyst'> {}
  */
 export default function Analyst(props: Props) {
   const [license, setLicense] = useState<ILicenseInfo | undefined>();
-  const [clientUrl, setClientUrl] = useState<string | undefined>();
 
   const [drawType, setDrawType] = useState<DrawType>(DrawType.Select);
   const [analystType, setAnalystType] = useState<AnalystType>(AnalystType.Null);
@@ -154,16 +153,6 @@ export default function Analyst(props: Props) {
       WebMapUtil.setClient(null);
     };
   }, []);
-
-  useEffect(() => {
-    if (license) {
-      // 获取 sdk web 服务地址
-      const res = RTNWebMap.getClientUrl();
-      if (res) {
-        setClientUrl(res);
-      }
-    }
-  }, [license]);
 
   /** 添加选择监听 */
   const addSelectListener = () => {
@@ -826,7 +815,6 @@ export default function Analyst(props: Props) {
 
   /** 左侧工具栏 */
   const _renderDrawMethods = () => {
-    if (!clientUrl) return null;
     return (
       <View
         style={{
@@ -994,18 +982,15 @@ export default function Analyst(props: Props) {
     );
   };
 
-  if (!license || !clientUrl) return null;
+  if (!license) return null;
 
   return (
-    <WebmapView
-      clientUrl={clientUrl}
-      onInited={onLoad}
-      navigation={props.navigation}>
+    <MapView onInited={onLoad} navigation={props.navigation}>
       {_renderDrawMethods()}
       {_renderTools()}
       {_renderAim()}
       {_renderBar()}
-    </WebmapView>
+    </MapView>
   );
 }
 

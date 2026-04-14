@@ -1,10 +1,5 @@
-import Loading from './Loading'
-import WebmapView from './WebmapView'
-import ImageButton from './ImageButton'
+import Loading from './Loading';
+import MapView from './MapView';
+import ImageButton from './ImageButton';
 
-export {
-  Loading,
-  WebmapView,
-  ImageButton,
-}
-
+export { Loading, MapView, ImageButton };

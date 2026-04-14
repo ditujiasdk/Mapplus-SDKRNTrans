@@ -13,14 +13,10 @@ import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { getAssets } from '../../assets';
 import { ImageButton } from '../../components';
-import WebmapView from '../../components/WebmapView';
+import MapView from '../../components/MapView';
 import BaseLayerData from '../../constants/BaseLayerData';
 import { DemoStackPageProps } from '../../navigators/types';
-import {
-  DataUtil,
-  LicenseUtil,
-  WebMapUtil,
-} from '../../utils';
+import { DataUtil, LicenseUtil, WebMapUtil } from '../../utils';
 const exampleData = require('../../example/ThemeMap.json');
 
 interface Props extends DemoStackPageProps<'ThemeLayer'> {}
@@ -37,7 +33,6 @@ type MThemeLayerType =
  */
 export default function ThemeLayer(props: Props) {
   const [license, setLicense] = useState<ILicenseInfo | undefined>();
-  const [clientUrl, setClientUrl] = useState<string | undefined>();
   const [baseLayer, setBaseLayer] = useState<
     | {
         datasourceID: string;
@@ -60,14 +55,6 @@ export default function ThemeLayer(props: Props) {
   }, []);
 
   useEffect(() => {
-    // 激活sdk后，初始化
-    if (license) {
-      // 获取 sdk web 服务地址
-      const res = RTNWebMap.getClientUrl();
-      if (res) {
-        setClientUrl(res);
-      }
-    }
     return () => {
       // 退出页面，关闭地图
       WebMapUtil.getClient()?.mapControl.closeMap();
@@ -312,18 +299,17 @@ export default function ThemeLayer(props: Props) {
     );
   };
 
-  if (!license || !clientUrl) return null;
+  if (!license) return null;
 
   return (
-    <WebmapView
-      clientUrl={clientUrl}
+    <MapView
       onInited={client => {
         WebMapUtil.setClient(client);
         init(client);
       }}
       navigation={props.navigation}>
       {_renderTools()}
-    </WebmapView>
+    </MapView>
   );
 }
 

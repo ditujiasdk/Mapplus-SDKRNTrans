@@ -28,7 +28,7 @@ import {
   View,
 } from 'react-native';
 import { getAssets } from '../../assets';
-import { WebmapView } from '../../components';
+import { MapView } from '../../components';
 import { DemoStackPageProps } from '../../navigators/types';
 import { LicenseUtil, MapUtil, WebMapUtil } from '../../utils';
 
@@ -57,7 +57,6 @@ interface MyFieldInfo {
  */
 export default function ObjectAttribute(props: Props) {
   const [license, setLicense] = useState<ILicenseInfo | undefined>();
-  const [clientUrl, setClientUrl] = useState<string | undefined>();
 
   const [selectData, setSelectData] = useState<SelectData>();
   const [fieldInfos, setFieldInfos] = useState<MyFieldInfo[]>([]);
@@ -328,16 +327,6 @@ export default function ObjectAttribute(props: Props) {
       WebMapUtil.setClient(null);
     };
   }, []);
-
-  useEffect(() => {
-    if (license) {
-      // 获取 sdk web 服务地址
-      const res = RTNWebMap.getClientUrl();
-      if (res) {
-        setClientUrl(res);
-      }
-    }
-  }, [license]);
 
   const selectHandler = async (data: {
     /**
@@ -718,17 +707,14 @@ export default function ObjectAttribute(props: Props) {
     );
   };
 
-  if (!license || !clientUrl) return null;
+  if (!license) return null;
 
   return (
-    <WebmapView
-      clientUrl={clientUrl}
-      onInited={onLoad}
-      navigation={props.navigation}>
+    <MapView onInited={onLoad} navigation={props.navigation}>
       {renderTools()}
       {renderTips()}
       {renderAttributeView()}
-    </WebmapView>
+    </MapView>
   );
 }
 

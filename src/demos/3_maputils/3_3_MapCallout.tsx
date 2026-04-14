@@ -18,7 +18,7 @@ import {
   View,
 } from 'react-native';
 import { getAssets } from '../../assets';
-import { WebmapView } from '../../components';
+import { MapView } from '../../components';
 import BaseLayerData from '../../constants/BaseLayerData';
 import { DemoStackPageProps } from '../../navigators/types';
 import { DataUtil, LicenseUtil, WebMapUtil } from '../../utils';
@@ -32,7 +32,6 @@ interface Props extends DemoStackPageProps<'MapCallout'> {}
  */
 export default function MapCallout(props: Props) {
   const [license, setLicense] = useState<ILicenseInfo | undefined>();
-  const [clientUrl, setClientUrl] = useState<string | undefined>();
 
   /** 准星图标句柄 用于获取屏幕坐标 */
   const aimPointImageRef = useRef<Image>(null);
@@ -95,16 +94,6 @@ export default function MapCallout(props: Props) {
       WebMapUtil.setClient(null);
     };
   }, []);
-
-  useEffect(() => {
-    if (license) {
-      // 获取 sdk web 服务地址
-      const res = RTNWebMap.getClientUrl();
-      if (res) {
-        setClientUrl(res);
-      }
-    }
-  }, [license]);
 
   /**
    * 获取屏幕坐标/地图坐标
@@ -201,16 +190,13 @@ export default function MapCallout(props: Props) {
     );
   };
 
-  if (!license || !clientUrl) return null;
+  if (!license) return null;
 
   return (
-    <WebmapView
-      clientUrl={clientUrl}
-      onInited={onLoad}
-      navigation={props.navigation}>
+    <MapView onInited={onLoad} navigation={props.navigation}>
       {_renderAim()}
       {_renderBar()}
-    </WebmapView>
+    </MapView>
   );
 }
 

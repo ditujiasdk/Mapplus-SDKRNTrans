@@ -18,7 +18,7 @@ import {
 } from 'react-native';
 import { getAssets } from '../../assets';
 import { ImageButton } from '../../components';
-import WebmapView from '../../components/WebmapView';
+import MapView from '../../components/MapView';
 import BaseLayerData from '../../constants/BaseLayerData';
 import { DemoStackPageProps } from '../../navigators/types';
 import { LicenseUtil, MapUtil, ToolRefs, WebMapUtil } from '../../utils';
@@ -38,7 +38,6 @@ interface Props extends DemoStackPageProps<'DataImport'> {}
  */
 export default function DataImport(props: Props) {
   const [license, setLicense] = useState<ILicenseInfo | undefined>();
-  const [clientUrl, setClientUrl] = useState<string | undefined>();
 
   // excel 数据
   const [excelData, setExcelData] = useState<ExcelData>();
@@ -79,16 +78,6 @@ export default function DataImport(props: Props) {
       WebMapUtil.setClient(null);
     };
   }, []);
-
-  useEffect(() => {
-    if (license) {
-      // 2. 获取 sdk web 服务地址
-      const res = RTNWebMap.getClientUrl();
-      if (res) {
-        setClientUrl(res);
-      }
-    }
-  }, [license]);
 
   const _onLoad = (client: Client) => {
     // 3. 场景加载后，初始化图层
@@ -158,6 +147,7 @@ export default function DataImport(props: Props) {
 
     ToolRefs.getLoading()?.setLoading(false);
   };
+
   /**
    * 打开文件管理器，选择 shp 文件
    */
@@ -165,8 +155,8 @@ export default function DataImport(props: Props) {
     const client = WebMapUtil.getClient();
     if (!client) return;
 
-    let res: IFileUri[] = []
-    if(Platform.OS === 'android') {
+    let res: IFileUri[] = [];
+    if (Platform.OS === 'android') {
       // android 至多只能指定一种类型文件，这里不指定特定类型
       res = await RTNWebMap.pickFileUri(null);
     } else {
@@ -193,14 +183,40 @@ export default function DataImport(props: Props) {
     const client = WebMapUtil.getClient();
     if (!client) return;
 
-    const res = await RTNWebMap.importTiles()
-   
-    console.log('xzy',res)
+    const res = await RTNWebMap.pickFileUri({ filter: ['zip'] });
+    if (res.length === 0) return;
+
+    ToolRefs.getLoading()?.setLoading(true, {
+      info: '正在导入数据...',
+    });
+
+    const sources = await client.datasources.createFromSHPFile(res[0].uri);
+    addLayerFromSources(sources);
+
+    ToolRefs.getLoading()?.setLoading(false);
+  };
+
+  /**
+   * 打开文件管理器，选择 离线栅格 的zip文件
+   */
+  const openDictImageZip = async () => {
+    const client = WebMapUtil.getClient();
+    if (!client) return;
+
+    const res = await RTNWebMap.importTiles();
+
+    console.log('xzy', res);
     const sourceID = await client.datasources.add({
-      type: "raster",
-      name: 'image','data':{"provider":"iserver","url":res.uri,"scheme":"xyz"}
-    })
-    sourceID && await client.baseLayers.add({"type":"image","name":'test',"sourceId":sourceID})
+      type: 'raster',
+      name: 'image',
+      data: { provider: 'iserver', url: res.uri, scheme: 'xyz' },
+    });
+    sourceID &&
+      (await client.baseLayers.add({
+        type: 'image',
+        name: 'test',
+        sourceId: sourceID,
+      }));
 
     ToolRefs.getLoading()?.setLoading(false);
   };
@@ -248,11 +264,11 @@ export default function DataImport(props: Props) {
             title={'Shp Zip'}
             onPress={openDictShpZip}
           />
-           <ImageButton
+          <ImageButton
             style={styles.methodBtn}
             image={getAssets().icon_import}
             title={'栅格瓦片'}
-            onPress={openDictShpZip}
+            onPress={openDictImageZip}
           />
         </View>
       </View>
@@ -312,7 +328,7 @@ export default function DataImport(props: Props) {
       },
     );
     if (sources) {
-      addLayerFromSources([sources])
+      addLayerFromSources([sources]);
       // 导入成功后，清空选择
       cancel();
     } else {
@@ -352,17 +368,14 @@ export default function DataImport(props: Props) {
     );
   };
 
-  if (!license || !clientUrl) return null;
+  if (!license) return null;
 
   return (
     <>
-      <WebmapView
-        clientUrl={clientUrl}
-        onInited={_onLoad}
-        navigation={props.navigation}>
+      <MapView onInited={_onLoad} navigation={props.navigation}>
         {_renderTools()}
         {_renderXYModel()}
-      </WebmapView>
+      </MapView>
     </>
   );
 }

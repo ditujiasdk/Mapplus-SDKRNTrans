@@ -11,6 +11,7 @@
 
 #include "RNOH/Package.h"
 #include "RNOH/ArkTSTurboModule.h"
+#include "generated/RTNTTSTools.h"
 #include "generated/NativeToolsModules.h"
 
 namespace rnoh {
@@ -18,6 +19,9 @@ namespace rnoh {
 class RNOHGeneratedPackageTurboModuleFactoryDelegate : public TurboModuleFactoryDelegate {
   public:
     SharedTurboModule createTurboModule(Context ctx, const std::string &name) const override {
+        if (name == "RTNTTSTools") {
+            return std::make_shared<RTNTTSTools>(ctx, name);
+        }
         if (name == "NativeToolsModules") {
             return std::make_shared<NativeToolsModules>(ctx, name);
         }

@@ -5,7 +5,7 @@ import { Client, ILicenseInfo, RTNWebMap } from '@mapplus/react-native-webmap';
 import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { getAssets } from '../../assets';
-import { ImageButton, WebmapView } from '../../components';
+import { ImageButton, MapView } from '../../components';
 import BaseLayerData from '../../constants/BaseLayerData';
 import { DemoStackPageProps } from '../../navigators/types';
 import { LicenseUtil, ToolRefs, WebMapUtil } from '../../utils';
@@ -19,7 +19,6 @@ interface Props extends DemoStackPageProps<'MapOpenSave'> {}
  */
 export default function MapOpenSave(props: Props) {
   const [license, setLicense] = useState<ILicenseInfo | undefined>();
-  const [clientUrl, setClientUrl] = useState<string | undefined>();
 
   const openMapUriRef = useRef<string | null>(null);
 
@@ -62,16 +61,6 @@ export default function MapOpenSave(props: Props) {
       WebMapUtil.setClient(null);
     };
   }, []);
-
-  useEffect(() => {
-    if (license) {
-      // 获取 sdk web 服务地址
-      const res = RTNWebMap.getClientUrl();
-      if (res) {
-        setClientUrl(res);
-      }
-    }
-  }, [license]);
 
   /**
    * 导入并打开地图
@@ -168,15 +157,12 @@ export default function MapOpenSave(props: Props) {
     );
   };
 
-  if (!license || !clientUrl) return null;
+  if (!license) return null;
 
   return (
-    <WebmapView
-      clientUrl={clientUrl}
-      onInited={onLoad}
-      navigation={props.navigation}>
+    <MapView onInited={onLoad} navigation={props.navigation}>
       {renderTools()}
-    </WebmapView>
+    </MapView>
   );
 }
 

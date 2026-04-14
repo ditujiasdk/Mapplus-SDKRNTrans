@@ -1,39 +1,47 @@
 /**
  * 底图demo
- * 
+ *
  * 实现矢量底图和影响底图的添加和切换
  */
 import { ILicenseInfo, RTNWebMap } from '@mapplus/react-native-webmap';
 import { useEffect, useRef, useState } from 'react';
-import { Animated, SectionList, SectionListData, SectionListRenderItemInfo, Text, TouchableOpacity, View } from 'react-native';
-import WebmapView from '../../components/WebmapView';
+import {
+  Animated,
+  SectionList,
+  SectionListData,
+  SectionListRenderItemInfo,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import MapView from '../../components/MapView';
 import BaseLayerData, { BaseLayerItem } from '../../constants/BaseLayerData';
 import { DemoStackPageProps } from '../../navigators/types';
 import { LicenseUtil, WebMapUtil } from '../../utils';
 
-interface Props extends DemoStackPageProps<'BaseMap'> { }
+interface Props extends DemoStackPageProps<'BaseMap'> {}
 
 interface Section {
-  title: string
-  data: BaseLayerItem[]
+  title: string;
+  data: BaseLayerItem[];
 }
 
 export default function BaseMap(props: Props) {
-  const [license, setLicense] = useState<ILicenseInfo | undefined>()
-  const [clientUrl, setClientUrl] = useState<string | undefined>()
-  const [panelVisible, setPanelVisible] = useState(false)
-  const [layerData, setLayerData] = useState<Section[]>([])
+  const [license, setLicense] = useState<ILicenseInfo | undefined>();
 
-  const currentBaseLayers = useRef<string[]>([])
+  const [panelVisible, setPanelVisible] = useState(false);
+  const [layerData, setLayerData] = useState<Section[]>([]);
+
+  const currentBaseLayers = useRef<string[]>([]);
 
   const rotateValue = useRef(new Animated.Value(0)).current; // 初始角度为0度
 
   /** 激活许可 */
   const initLicense = () => {
     LicenseUtil.active().then(res => {
-      setLicense(res)
-    })
-  }
+      setLicense(res);
+    });
+  };
 
   /** 初始化数据 */
   const initData = () => {
@@ -46,30 +54,23 @@ export default function BaseMap(props: Props) {
         title: '矢量图层',
         data: BaseLayerData.vector,
       },
-    ])
-  }
+    ]);
+  };
 
   useEffect(() => {
     // 激活 sdk 许可
-    initLicense()
-    initData()
-  }, [])
+    initLicense();
+    initData();
+  }, []);
 
   useEffect(() => {
     // 激活sdk后，初始化
-    if (license) {
-      // 获取 sdk web 服务地址
-      const res = RTNWebMap.getClientUrl()
-      if (res) {
-        setClientUrl(res)
-      }
-    }
     return () => {
       // 退出页面，关闭地图
-      WebMapUtil.getClient()?.mapControl.closeMap()
-      WebMapUtil.setClient(null)
-    }
-  }, [license])
+      WebMapUtil.getClient()?.mapControl.closeMap();
+      WebMapUtil.setClient(null);
+    };
+  }, [license]);
 
   useEffect(() => {
     // 添加按钮旋转动画
@@ -78,14 +79,14 @@ export default function BaseMap(props: Props) {
       duration: 200,
       useNativeDriver: false,
     }).start();
-  }, [panelVisible])
+  }, [panelVisible]);
 
   const initLayers = async () => {
-    const client = WebMapUtil.getClient()
-    if (!client) return
+    const client = WebMapUtil.getClient();
+    if (!client) return;
 
-    changeBaseLayer(BaseLayerData.vector[0])
-  }
+    changeBaseLayer(BaseLayerData.vector[0]);
+  };
 
   /**
    * 移动到指定位置到指定点位
@@ -103,52 +104,67 @@ export default function BaseMap(props: Props) {
       duration: 1000,
       scale: 4.4911532365316153e-8,
     });
-  }
+  };
 
   /**
    * 切换底图
    * @param data 底图数据
-   * @returns 
+   * @returns
    */
   const changeBaseLayer = async (data: BaseLayerItem) => {
     const client = WebMapUtil.getClient();
-    if (!client) return
+    if (!client) return;
     // 临时储存当前添加的底图id
-    const tempIds = []
-    const dss = await data.action()
+    const tempIds = [];
+    const dss = await data.action();
     for (const ds of dss) {
       if (ds) {
         // 添加底图
         const id = await client.baseLayers.add({
           sourceId: ds.id,
           name: ds.name,
-          type: 'image'
-        })
-        id && tempIds.push(id)
+          type: 'image',
+        });
+        id && tempIds.push(id);
       }
     }
     if (tempIds.length > 0) {
       // 移除之前的底图
       if (currentBaseLayers.current.length > 0) {
         for (const id of currentBaseLayers.current) {
-          client.baseLayers.remove(id)
+          client.baseLayers.remove(id);
         }
       }
       // 记录当前的底图id
-      currentBaseLayers.current = tempIds
+      currentBaseLayers.current = tempIds;
     }
-  }
+  };
 
-  const _renderSection = (info: { section: SectionListData<BaseLayerItem, Section> }) => {
+  const _renderSection = (info: {
+    section: SectionListData<BaseLayerItem, Section>;
+  }) => {
     return (
       <View
-        style={{ flexDirection: 'row', marginBottom: 6, alignItems: 'center', backgroundColor: 'transparent' }}>
-        <Text style={[{ fontSize: 16, color: '#333', marginTop: 10, marginBottom: 10 }]}>{info.section.title}</Text>
+        style={{
+          flexDirection: 'row',
+          marginBottom: 6,
+          alignItems: 'center',
+          backgroundColor: 'transparent',
+        }}>
+        <Text
+          style={[
+            { fontSize: 16, color: '#333', marginTop: 10, marginBottom: 10 },
+          ]}>
+          {info.section.title}
+        </Text>
       </View>
-    )
-  }
+    );
+  };
 
-  const _renderItem = ({ section, index }: SectionListRenderItemInfo<BaseLayerItem, Section>) => {
+  const _renderItem = ({
+    section,
+    index,
+  }: SectionListRenderItemInfo<BaseLayerItem, Section>) => {
     return (
       <TouchableOpacity
         key={index}
@@ -160,27 +176,24 @@ export default function BaseMap(props: Props) {
           borderColor: '#ddd',
         }}
         onPress={async () => {
-          changeBaseLayer(section.data[index])
+          changeBaseLayer(section.data[index]);
           setPanelVisible(false);
-        }}
-      >
-        <Text style={{ textAlign: 'center', padding: 8 }}>{section.data[index].title}</Text>
+        }}>
+        <Text style={{ textAlign: 'center', padding: 8 }}>
+          {section.data[index].title}
+        </Text>
       </TouchableOpacity>
-    )
-  }
-
-  if (!clientUrl) return null
+    );
+  };
 
   return (
-    <WebmapView
-      clientUrl={clientUrl}
+    <MapView
       onInited={client => {
         WebMapUtil.setClient(client);
-        initLayers()
-        flyToInitPosition()
+        initLayers();
+        flyToInitPosition();
       }}
-      navigation={props.navigation}
-    >
+      navigation={props.navigation}>
       <>
         <TouchableOpacity
           onPress={() => setPanelVisible(visible => !visible)}
@@ -196,18 +209,22 @@ export default function BaseMap(props: Props) {
             justifyContent: 'center',
             alignItems: 'center',
             zIndex: 100,
-          }}
-        >
-          <Animated.Text style={{
-            color: 'white',
-            fontSize: 36,
-            transform: [{
-              rotate: rotateValue.interpolate({
-                inputRange: [0, 45],
-                outputRange: ['0deg', '45deg']
-              })
-            }]
-          }}>+</Animated.Text>
+          }}>
+          <Animated.Text
+            style={{
+              color: 'white',
+              fontSize: 36,
+              transform: [
+                {
+                  rotate: rotateValue.interpolate({
+                    inputRange: [0, 45],
+                    outputRange: ['0deg', '45deg'],
+                  }),
+                },
+              ],
+            }}>
+            +
+          </Animated.Text>
         </TouchableOpacity>
 
         {panelVisible && (
@@ -220,8 +237,7 @@ export default function BaseMap(props: Props) {
               width: 300,
               backgroundColor: 'white',
               padding: 16,
-            }}
-          >
+            }}>
             <SectionList
               style={{ width: '100%' }}
               refreshing={false}
@@ -238,6 +254,6 @@ export default function BaseMap(props: Props) {
           </View>
         )}
       </>
-    </WebmapView>
-  )
+    </MapView>
+  );
 }

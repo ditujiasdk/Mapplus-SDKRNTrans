@@ -15,7 +15,7 @@ import {
   View,
 } from 'react-native';
 import { getAssets } from '../../assets';
-import WebmapView from '../../components/WebmapView';
+import MapView from '../../components/MapView';
 import BaseLayerData from '../../constants/BaseLayerData';
 import { DemoStackPageProps } from '../../navigators/types';
 import { LicenseUtil, MapUtil, WebMapUtil } from '../../utils';
@@ -27,7 +27,6 @@ interface Props extends DemoStackPageProps<'DrawText'> {}
  */
 export default function DrawText(props: Props) {
   const [license, setLicense] = useState<ILicenseInfo | undefined>();
-  const [clientUrl, setClientUrl] = useState<string | undefined>();
 
   /** 文本 */
   const textRef = useRef('');
@@ -50,14 +49,6 @@ export default function DrawText(props: Props) {
   }, []);
 
   useEffect(() => {
-    // 激活sdk后，初始化
-    if (license) {
-      // 获取 sdk web 服务地址
-      const res = RTNWebMap.getClientUrl();
-      if (res) {
-        setClientUrl(res);
-      }
-    }
     return () => {
       // 退出页面，关闭地图
       WebMapUtil.getClient()?.mapControl.closeMap();
@@ -259,11 +250,10 @@ export default function DrawText(props: Props) {
       </KeyboardAvoidingView>
     );
   };
-  if (!license || !clientUrl) return null;
+  if (!license) return null;
 
   return (
-    <WebmapView
-      clientUrl={clientUrl}
+    <MapView
       onInited={client => {
         WebMapUtil.setClient(client);
         init();
@@ -271,7 +261,7 @@ export default function DrawText(props: Props) {
       navigation={props.navigation}>
       {_renderAim()}
       {_renderTextBar()}
-    </WebmapView>
+    </MapView>
   );
 }
 

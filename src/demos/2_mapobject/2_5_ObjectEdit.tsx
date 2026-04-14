@@ -24,7 +24,7 @@ import {
   View,
 } from 'react-native';
 import { getAssets } from '../../assets';
-import { WebmapView } from '../../components';
+import { MapView } from '../../components';
 import BaseLayerData from '../../constants/BaseLayerData';
 import { DemoStackPageProps } from '../../navigators/types';
 import { LicenseUtil, MapUtil, ToolRefs, WebMapUtil } from '../../utils';
@@ -49,7 +49,6 @@ interface SelectData {
  */
 export default function ObjectEdit(props: Props) {
   const [license, setLicense] = useState<ILicenseInfo | undefined>();
-  const [clientUrl, setClientUrl] = useState<string | undefined>();
 
   const [isEdit, setIsEdit] = useState(false);
   const [isMove, setIsMove] = useState(false);
@@ -125,19 +124,16 @@ export default function ObjectEdit(props: Props) {
 
     // 添加数据源
 
-
-   
-
-    let  dsId 
+    let dsId;
 
     // if(params.type === 'geojson' && params.geometryType === 'fill'){
     //    const res = await RTNWebMap.pickFileUri({ filter: ['json'] });
     //     if (res.length === 0) return;
-    
+
     //     ToolRefs.getLoading()?.setLoading(true, {
     //       info: '正在导入数据...',
     //     });
-    
+
     //     const sources = await webmap.datasources.createFromGeoJSONFile(
     //       RegionLayer,
     //       res[0].uri,
@@ -146,8 +142,8 @@ export default function ObjectEdit(props: Props) {
     //        dsId = sources[0].id;
     //      }
     // }else
-      {
-        dsId = await webmap.datasources.add(params);
+    {
+      dsId = await webmap.datasources.add(params);
     }
 
     if (dsId && params.type === 'geojson') {
@@ -301,16 +297,6 @@ export default function ObjectEdit(props: Props) {
       WebMapUtil.setClient(null);
     };
   }, []);
-
-  useEffect(() => {
-    if (license) {
-      // 获取 sdk web 服务地址
-      const res = RTNWebMap.getClientUrl();
-      if (res) {
-        setClientUrl(res);
-      }
-    }
-  }, [license]);
 
   /**
    * 开始编辑
@@ -495,7 +481,7 @@ export default function ObjectEdit(props: Props) {
         },
       );
 
-        const result1 = await client.recordset.addNew(
+      const result1 = await client.recordset.addNew(
         regionLayerRef.current.dsId,
         {
           type: 'fill',
@@ -669,17 +655,14 @@ export default function ObjectEdit(props: Props) {
     );
   };
 
-  if (!license || !clientUrl) return null;
+  if (!license) return null;
 
   return (
-    <WebmapView
-      clientUrl={clientUrl}
-      onInited={onLoad}
-      navigation={props.navigation}>
+    <MapView onInited={onLoad} navigation={props.navigation}>
       {renderTips()}
       {renderTools()}
       {renderToolsView()}
-    </WebmapView>
+    </MapView>
   );
 }
 

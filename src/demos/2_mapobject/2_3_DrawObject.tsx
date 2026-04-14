@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 import { getAssets } from '../../assets';
 import { ImageButton } from '../../components';
-import WebmapView from '../../components/WebmapView';
+import MapView from '../../components/MapView';
 import BaseLayerData from '../../constants/BaseLayerData';
 import { DemoStackPageProps } from '../../navigators/types';
 import { LicenseUtil, WebMapUtil } from '../../utils';
@@ -52,8 +52,6 @@ export default function DrawObject(props: Props) {
   /** 准星图标句柄 用于获取屏幕坐标 */
   const aimPointImageRef = useRef<Image>(null);
 
-  const [clientUrl, setClientUrl] = useState<string | undefined>();
-
   /** 激活许可 */
   const initLicense = () => {
     LicenseUtil.active().then(res => {
@@ -67,14 +65,6 @@ export default function DrawObject(props: Props) {
   }, []);
 
   useEffect(() => {
-    // 激活sdk后，初始化
-    if (license) {
-      // 获取 sdk web 服务地址
-      const res = RTNWebMap.getClientUrl();
-      if (res) {
-        setClientUrl(res);
-      }
-    }
     return () => {
       // 退出页面，关闭地图
       WebMapUtil.getClient()?.mapControl.closeMap();
@@ -409,7 +399,6 @@ export default function DrawObject(props: Props) {
 
   /** 左侧工具栏 */
   const _renderDrawMethods = () => {
-    if (!clientUrl) return null;
     return (
       <View
         style={{
@@ -534,11 +523,8 @@ export default function DrawObject(props: Props) {
     );
   };
 
-  if (!clientUrl) return null;
-
   return (
-    <WebmapView
-      clientUrl={clientUrl}
+    <MapView
       onInited={client => {
         WebMapUtil.setClient(client);
         init();
@@ -548,7 +534,7 @@ export default function DrawObject(props: Props) {
       {_renderAim()}
       {_renderBar()}
       {_renderTips()}
-    </WebmapView>
+    </MapView>
   );
 }
 

@@ -11,7 +11,7 @@ import {
 } from '@mapplus/react-native-webmap';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ImageButton, WebmapView } from '../../components';
+import { ImageButton, MapView } from '../../components';
 import BaseLayerData from '../../constants/BaseLayerData';
 import { DemoStackPageProps } from '../../navigators/types';
 import { DataUtil, LicenseUtil, WebMapUtil } from '../../utils';
@@ -32,7 +32,6 @@ interface Props extends DemoStackPageProps<'Measure'> {}
  */
 export default function Measure(props: Props) {
   const [license, setLicense] = useState<ILicenseInfo | undefined>();
-  const [clientUrl, setClientUrl] = useState<string | undefined>();
 
   const [measureValue, setMeasureValue] = useState('');
   const [measureType, setMeasureType] = useState<MeasureType>(MeasureType.NULL);
@@ -131,16 +130,6 @@ export default function Measure(props: Props) {
       WebMapUtil.setClient(null);
     };
   }, []);
-
-  useEffect(() => {
-    if (license) {
-      // 获取 sdk web 服务地址
-      const res = RTNWebMap.getClientUrl();
-      if (res) {
-        setClientUrl(res);
-      }
-    }
-  }, [license]);
 
   /** 提交 */
   const submit = () => {
@@ -312,16 +301,13 @@ export default function Measure(props: Props) {
         </View>
       );
   };
-  if (!license || !clientUrl) return null;
+  if (!license) return null;
 
   return (
-    <WebmapView
-      clientUrl={clientUrl}
-      onInited={onLoad}
-      navigation={props.navigation}>
+    <MapView onInited={onLoad} navigation={props.navigation}>
       {renderTools()}
       {renderTools2()}
-    </WebmapView>
+    </MapView>
   );
 }
 
