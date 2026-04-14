@@ -1,9 +1,18 @@
+/*
+ * @Author: xiezhiyan 16297996+xiezhiyan@users.noreply.github.com
+ * @Date: 2026-03-16 14:30:43
+ * @LastEditors: xiezhiyan 16297996+xiezhiyan@users.noreply.github.com
+ * @LastEditTime: 2026-04-14 16:35:58
+ * @FilePath: /RNTrans/src/pages/Home.tsx
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import { ILicenseInfo, RTNWebMap } from '@mapplus/react-native-webmap';
 import { useEffect, useState } from 'react';
 import { Button, Text, View } from 'react-native';
 import { DemoStackPageProps } from 'src/navigators/types';
+import { ToolRefs } from './../utils';
 
-interface Props extends DemoStackPageProps<'DemoHome'> { }
+interface Props extends DemoStackPageProps<'DemoHome'> {}
 
 export default function Home({ navigation }: Props) {
   const [license, setLicense] = useState<ILicenseInfo | undefined>();
@@ -69,23 +78,25 @@ export default function Home({ navigation }: Props) {
       <View style={{ marginTop: 20 }}>
         <Button
           title="地图操作示例"
-          onPress={() => navigation.navigate('DemoList')}
+          onPress={() => {
+            ToolRefs.getNativeBackBtn()?.setShow(false);
+            navigation.navigate('DemoList');
+          }}
         />
       </View>
     </View>
   );
 }
 
-
 function getTimeString(time: number) {
-  const date = new Date(time)
+  const date = new Date(time);
 
-  const year = date.getFullYear()
-  const month = date.getMonth() + 1
-  const day = date.getDate()
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
 
-  const hour = date.getHours()
-  const minite = date.getMinutes()
+  const hour = date.getHours();
+  const minite = date.getMinutes();
 
-  return `${year}/${month}/${day} ${hour}:${minite}`
+  return `${year}/${month}/${day} ${hour}:${minite}`;
 }

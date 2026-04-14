@@ -2,103 +2,109 @@
  * @Author: xiezhiyan 16297996+xiezhiyan@users.noreply.github.com
  * @Date: 2025-07-09 17:18:54
  * @LastEditors: xiezhiyan 16297996+xiezhiyan@users.noreply.github.com
- * @LastEditTime: 2025-10-09 14:20:27
+ * @LastEditTime: 2026-04-14 16:38:47
  * @FilePath: /web2dsdkrn/src/demos/DemoList.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { Image, SectionList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  SectionList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { DemoStackPageProps, DemoStackParamList } from 'src/navigators/types';
 import { getAssets } from '../assets';
+import { ToolRefs } from './../utils';
 
 interface DemoItem {
   title: string;
-  path: keyof DemoStackParamList
+  path: keyof DemoStackParamList;
 }
 
-interface Props extends DemoStackPageProps<'DemoList'> {
-
-}
+interface Props extends DemoStackPageProps<'DemoList'> {}
 
 const DemoList = ({ navigation }: Props) => {
   const DATA: {
     title: string;
     data: DemoItem[];
   }[] = [
-      {
-        title: '基础地图',
-        data: [
-          {
-            title: '底图数据',
-            path: 'BaseMap',
-          },
-          // {
-          //   title: '地图样式',
-          //   path: 'MapStyle',
-          // },
-          // {
-          //   title: '地图定位',
-          //   path: 'MapLocation',
-          // },
-        ],
-      },
-      {
-        title: '底图覆盖物',
-        data: [
-          {
-            title: '数据导入',
-            path: 'DataImport',
-          },
-          {
-            title: '保存打开',
-            path: 'MapOpenSave',
-          },
-          {
-            title: '对象绘制',
-            path: 'DrawObject',
-          },
-          {
-            title: '文本绘制',
-            path: 'DrawText',
-          },
-          {
-            title: '对象编辑',
-            path: 'ObjectEdit',
-          },
-          {
-            title: '对象属性',
-            path: 'ObjectAttribute',
-          },
-          {
-            title: '图层样式',
-            path: 'LayerStyle',
-          },
-          {
-            title: '专题图',
-            path: 'ThemeLayer',
-          },
-        ],
-      },
-      {
-        title: '地图工具',
-        data: [
-          {
-            title: '测量',
-            path: 'Measure',
-          },
-          {
-            title: '数据分析',
-            path: 'Analyst',
-          },
-          {
-            title: '地图导航',
-            path: 'Navigation',
-          },
-        ],
-      },
-    ];
+    {
+      title: '基础地图',
+      data: [
+        {
+          title: '底图数据',
+          path: 'BaseMap',
+        },
+        // {
+        //   title: '地图样式',
+        //   path: 'MapStyle',
+        // },
+        // {
+        //   title: '地图定位',
+        //   path: 'MapLocation',
+        // },
+      ],
+    },
+    {
+      title: '底图覆盖物',
+      data: [
+        {
+          title: '数据导入',
+          path: 'DataImport',
+        },
+        {
+          title: '保存打开',
+          path: 'MapOpenSave',
+        },
+        {
+          title: '对象绘制',
+          path: 'DrawObject',
+        },
+        {
+          title: '文本绘制',
+          path: 'DrawText',
+        },
+        {
+          title: '对象编辑',
+          path: 'ObjectEdit',
+        },
+        {
+          title: '对象属性',
+          path: 'ObjectAttribute',
+        },
+        {
+          title: '图层样式',
+          path: 'LayerStyle',
+        },
+        {
+          title: '专题图',
+          path: 'ThemeLayer',
+        },
+      ],
+    },
+    {
+      title: '地图工具',
+      data: [
+        {
+          title: '测量',
+          path: 'Measure',
+        },
+        {
+          title: '数据分析',
+          path: 'Analyst',
+        },
+        {
+          title: '地图导航',
+          path: 'Navigation',
+        },
+      ],
+    },
+  ];
 
   const handlePress = (item: DemoItem) => {
-    item.path && navigation.navigate(item.path)
+    item.path && navigation.navigate(item.path);
   };
 
   const renderItem = ({ item }: { item: DemoItem }) => (
@@ -107,7 +113,11 @@ const DemoList = ({ navigation }: Props) => {
     </TouchableOpacity>
   );
 
-  const renderSectionHeader = ({ section: { title } }: { section: { title: string } }) => (
+  const renderSectionHeader = ({
+    section: { title },
+  }: {
+    section: { title: string };
+  }) => (
     <View style={styles.header}>
       <Text style={styles.headerText}>{title}</Text>
     </View>
@@ -118,14 +128,16 @@ const DemoList = ({ navigation }: Props) => {
       <View style={styles.headerView}>
         <TouchableOpacity
           style={styles.backBtn}
-          onPress={() => navigation.goBack()}
-        >
+          onPress={() => {
+            ToolRefs.getNativeBackBtn()?.setShow(true);
+            navigation.goBack();
+          }}>
           <Image style={styles.backImg} source={getAssets().icon_back} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>SDK示例</Text>
       </View>
-    )
-  }
+    );
+  };
 
   return (
     <View>
