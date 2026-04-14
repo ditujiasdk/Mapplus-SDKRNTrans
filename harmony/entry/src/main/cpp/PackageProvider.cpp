@@ -2,10 +2,16 @@
 #include "generated/RNOHGeneratedPackage.h"
 #include "WebMapPackage.h"
 #include "WebViewPackage.h"
+#include "RNFSPackage.h"
+#include "SafeAreaViewPackage.h"
+
 using namespace rnoh;
 
 std::vector<std::shared_ptr<Package>> PackageProvider::getPackages(Package::Context ctx) {
     return {std::make_shared<RNOHGeneratedPackage>(ctx),
             std::make_shared<WebMapPackage>(ctx),
-            std::make_shared<WebViewPackage>(ctx)};
+            std::make_shared<WebViewPackage>(ctx),
+            std::make_shared<SafeAreaViewPackage>(ctx),
+            std::make_shared<RNFSPackage>(ctx)
+    };
 }
