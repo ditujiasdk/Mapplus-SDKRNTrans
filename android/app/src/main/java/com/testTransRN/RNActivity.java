@@ -47,6 +47,8 @@ public class RNActivity extends ReactActivity {
     startActivity(intent);
     // 添加返回动画：从左向右滑动
     overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    // 调用父类的 onBackPressed 方法
+    super.onBackPressed();
   }
 
   /**
