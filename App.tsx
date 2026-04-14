@@ -5,8 +5,8 @@
  * @format
  */
 
-import React from "react";
-import type { PropsWithChildren } from "react";
+import React from 'react';
+import type { PropsWithChildren } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -16,15 +16,15 @@ import {
   useColorScheme,
   View,
   TouchableOpacity,
-} from "react-native";
+} from 'react-native';
 
-import NativeHTools from "./src/specs/v1/NativeToolsModules";
+import NativeHTools from './src/specs/v1/NativeToolsModules';
 // import WebView from "react-native-webview";
-import { Colors } from "react-native/Libraries/NewAppScreen";
-import { Client, RTNWebMap, WebMapView } from "@mapplus/react-native-webmap";
-import { useEffect, useState } from "react";
+import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { Client, RTNWebMap, WebMapView } from '@mapplus/react-native-webmap';
+import { useEffect, useState } from 'react';
 function App(): JSX.Element {
-  const isDarkMode = useColorScheme() === "dark";
+  const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
@@ -40,16 +40,16 @@ function App(): JSX.Element {
 
     const license = await RTNWebMap.getLicenseInfo();
     if (!license) {
-      const serial = "AT5EU-EP7F8-RMHDB-KMVTC-Q9FSS"; //序列号
+      const serial = 'AT5EU-EP7F8-RMHDB-KMVTC-Q9FSS'; //序列号
       const result = await RTNWebMap.activate(serial);
       if (result) {
-        console.log("激活成功");
+        console.log('激活成功');
         setValid(true);
       } else {
-        console.warn("激活失败");
+        console.warn('激活失败');
       }
     } else {
-      console.log("已激活");
+      console.log('已激活');
       setValid(true);
     }
   }
@@ -57,11 +57,11 @@ function App(): JSX.Element {
   async function onMapLoad(client: Client) {
     // 添加数据源：高德 墨卡托 gcj02
     const sourceId = await client.datasources.add({
-      type: "raster",
-      name: "gaode",
+      type: 'raster',
+      name: 'gaode',
       data: {
         tiles: [
-          "http://wprd04.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scl=2&style=7",
+          'http://wprd04.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scl=2&style=7',
         ],
         tileSize: 256,
       },
@@ -72,13 +72,13 @@ function App(): JSX.Element {
     }
 
     // 设置地图坐标系
-    await client.mapControl.setCRS("WebMercator", "GCJ02");
+    await client.mapControl.setCRS('WebMercator', 'GCJ02');
 
     // 添加底图
     await client.baseLayers.add({
-      type: "image",
+      type: 'image',
       sourceId: sourceId,
-      name: "gaode_layer",
+      name: 'gaode_layer',
     });
 
     // 定位
@@ -89,16 +89,16 @@ function App(): JSX.Element {
   }
 
   if (!valid) {
-    return null;
+    return <></>;
   }
 
   const handleBackPress = () => {
-    console.log("NativeHTools:", NativeHTools);
+    console.log('NativeHTools:', NativeHTools);
     if (NativeHTools) {
-      console.log("Calling goBackWithParams");
-      NativeHTools.goBackWithParams("reactnative");
+      console.log('Calling goBackWithParams');
+      NativeHTools.goBackWithParams('reactnative');
     } else {
-      console.log("NativeHTools is null");
+      console.log('NativeHTools is null');
     }
     return true;
   };
@@ -106,7 +106,7 @@ function App(): JSX.Element {
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar
-        barStyle={isDarkMode ? "light-content" : "dark-content"}
+        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
       <View style={styles.headerContainer}>
@@ -115,8 +115,7 @@ function App(): JSX.Element {
             style={[
               styles.backButtonText,
               { color: isDarkMode ? Colors.white : Colors.black },
-            ]}
-          >
+            ]}>
             ← 返回
           </Text>
         </TouchableOpacity>
@@ -134,19 +133,19 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 24,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   sectionDescription: {
     marginTop: 8,
     fontSize: 18,
-    fontWeight: "400",
+    fontWeight: '400',
   },
   highlight: {
-    fontWeight: "700",
+    fontWeight: '700',
   },
   headerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
@@ -155,7 +154,7 @@ const styles = StyleSheet.create({
   },
   backButtonText: {
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: '500',
   },
 });
 

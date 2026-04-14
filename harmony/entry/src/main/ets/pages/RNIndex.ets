@@ -60,6 +60,7 @@ struct Index {
             enableNDKTextMeasuring: true, // 该项必须为true，用于开启NDK文本测算
             enableBackgroundExecutor: false,
             enableCAPIArchitecture: true, // 该项必须为true，用于开启CAPI
+            enableDebugger:true,//开启RN调试
             arkTsComponentNames: [
               WEB_VIEW //components 添加 webview
             ]
