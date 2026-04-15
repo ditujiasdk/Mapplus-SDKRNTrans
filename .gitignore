@@ -56,7 +56,6 @@ captures/
 # 鸿蒙构建输出
 oh_modules/
 build/
-build-profile.json5
 cache/
 .hmscore/
 .hmignore
